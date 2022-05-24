@@ -1,16 +1,21 @@
 import { IncomingWebhook } from "@slack/webhook";
 import { MessageAttachment } from "@slack/types";
+import { parseDate } from "@utils/parse";
 
-export const sendMessageToChannel = async () => {
-  const messageToSend = createSlackMessage({
-    author: "esantana",
-    eventType: "Pull Request",
-    eventLink: "https://github.com",
-    repo: "Mock Repository",
-    repoLink: "https://github.com",
-    title: "First commit",
-    timestamp: 1653265656,
-  });
+type EventMessage = {
+  title: string;
+  author: string;
+  branch: string;
+  forcedAction: boolean;
+  repository: string;
+  repositoryURL: string;
+  eventLink: string;
+  eventType: string;
+  eventDate: string;
+};
+
+export const sendMessageToChannel = async (messageData: EventMessage) => {
+  const messageToSend = createSlackMessage(messageData);
   const webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL);
   await webhook.send({
     attachments: [messageToSend],
@@ -18,17 +23,7 @@ export const sendMessageToChannel = async () => {
   return messageToSend;
 };
 
-type eventMessage = {
-  title: string;
-  author: string;
-  repo: string;
-  repoLink: string;
-  eventLink: string;
-  eventType: string;
-  timestamp: number;
-};
-
-const createSlackMessage = (params: eventMessage) => {
+const createSlackMessage = (params: EventMessage) => {
   const message: MessageAttachment = {
     color: "#36a64f",
     blocks: [
@@ -37,15 +32,17 @@ const createSlackMessage = (params: eventMessage) => {
         text: {
           type: "mrkdwn",
           text: `\`@${params.author}\` ${params.eventType} to <${
-            params.repoLink
-          }|${params.repo}> at \`${parseDate(params.timestamp)}\``,
+            params.repositoryURL
+          }|${params.repository}> on branch ${params.branch} at \`${parseDate(
+            params.eventDate
+          )}\``,
         },
       },
       {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `Description: ${params.title}`,
+          text: `*Description:* ${params.title}`,
         },
       },
       {
@@ -60,7 +57,7 @@ const createSlackMessage = (params: eventMessage) => {
         fields: [
           {
             type: "mrkdwn",
-            text: `See the *<${params.eventLink}|${params.eventType}>* and make your review soon as possible`,
+            text: `Click *<${params.eventLink}|HERE>* to see the ${params.eventType} \nMake your review soon as possible`,
           },
         ],
       },
@@ -68,13 +65,3 @@ const createSlackMessage = (params: eventMessage) => {
   };
   return message;
 };
-
-const parseDate = (source: number): string =>
-  new Date(source).toLocaleString("pt-BR", {
-    timeZone: "America/Sao_Paulo",
-    hour12: false,
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
