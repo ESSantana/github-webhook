@@ -52,5 +52,5 @@ const pullRequestEvent = (eventBody: gitPR.IncomingType) => {
     baseRepoName: pull_request.base.repo.name,
   };
 
-  return parsedBody.action === "opened" ? undefined : parsedBody as gitPR.MessageType;
+  return parsedBody.action === "opened" ? parsedBody as gitPR.MessageType : undefined;
 };
