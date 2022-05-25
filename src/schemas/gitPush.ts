@@ -30,7 +30,7 @@ const schema = {
   required: ["ref", "repository", "pusher", "forced", "compare", "head_commit"],
 };
 
-type Type = {
+type IncomingType = {
   ref: string;
   repository: {
     url: string;
@@ -49,4 +49,16 @@ type Type = {
   };
 };
 
-export { schema, Type };
+type MessageType = {
+  title: string;
+  author: string;
+  branch: string;
+  forcedAction: boolean;
+  repository: string;
+  repositoryURL: string;
+  eventLink: string;
+  eventType: string;
+  createdAt: string;
+};
+
+export { schema, IncomingType, MessageType };

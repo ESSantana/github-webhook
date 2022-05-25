@@ -4,8 +4,10 @@
     "paths": {
       "@handlers/*": ["src/handlers/*"],
       "@handlers-configs/*": ["src/handlers/configs/*"],
-      "@libs/*": ["src/libs/*"],
+      "@helpers/*": ["src/helpers/*"],
+      "@middlewares/*": ["src/middlewares/*"],
       "@schemas/*": ["src/schemas/*"],
+      "@services/*": ["src/services/*"],
       "@utils/*": ["src/utils/*"]
     }
   }

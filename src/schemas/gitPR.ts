@@ -61,7 +61,7 @@ const schema = {
   required: ["action", "pull_request", "sender"],
 };
 
-type Type = {
+type IncomingType = {
   action: string;
   pull_request: {
     url: string;
@@ -96,4 +96,21 @@ type Type = {
   };
 };
 
-export { schema, Type };
+type MessageType = {
+  action: string;
+  actionResponsible: string;
+  actionResponsibleID: string;
+  actionResponsibleImage: string;
+  title: string;
+  eventLink: string;
+  actionState: string;
+  createdAt: string;
+  mergetAt: string;
+  eventType: string;
+  reviewers: { login: string; id: string }[];
+  headBranch: string;
+  baseBranch: string;
+  baseRepoName: string;
+};
+
+export { schema, IncomingType, MessageType };

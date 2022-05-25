@@ -1,5 +1,5 @@
 // import schema from "@schemas/github";
-import { handlerPath } from "@libs/handler-resolver";
+import { handlerPath } from "@utils/utils";
 
 export default {
   handler: handlerPath("github.main"),
