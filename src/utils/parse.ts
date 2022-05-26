@@ -3,7 +3,7 @@ import moment from "moment";
 export const parseDate = (source: string): string => {
   defineLocale(moment);
   moment.locale("pt-br");
-  return moment(source).format("LLL");
+  return moment(source).format("LL");
 };
 
 function defineLocale (moment) {

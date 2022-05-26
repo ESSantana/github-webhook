@@ -1,15 +1,13 @@
 import { IncomingWebhook } from "@slack/webhook";
 import * as gitPush from "@schemas/gitPush";
 import * as gitPR from "@schemas/gitPR";
-import * as msgFactory from "src/helpers/message";
+import * as msgFactory from "@helpers/slackMessageFactory";
 
 export const sendMessageToChannel = async (
   messageData: gitPush.MessageType | gitPR.MessageType
 ) => {
   const messageFactory = selectMessageFactory(messageData.eventType);
-
   const message = messageFactory(messageData as any);
-  console.debug("Mensagem criada: ", message);
   const webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL);
   await webhook.send({
     attachments: [message],

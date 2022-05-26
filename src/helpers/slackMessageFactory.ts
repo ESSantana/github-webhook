@@ -1,10 +1,9 @@
-import { MessageAttachment } from "@slack/types";
+import { MessageAttachment, Block, KnownBlock } from "@slack/types";
 import { parseDate } from "@utils/parse";
-import { Block, KnownBlock } from "@slack/types";
 import * as gitPush from "@schemas/gitPush";
 import * as gitPR from "@schemas/gitPR";
 
-const baseFactory = (blocks: (Block | KnownBlock)[], color?: string) => {
+const messageFactory = (blocks: (Block | KnownBlock)[], color?: string) => {
   const message: MessageAttachment = {
     color: color ?? "#36a64f",
     blocks,
@@ -29,12 +28,12 @@ const blockFactory = (blockText: string[]) => {
 
 export const push = (ps: gitPush.MessageType) => {
   const blocks = blockFactory([
-    `\`@${ps.author}\` ${ps.eventType} to <${ps.repositoryURL}|${ps.repository
-    }> on branch ${ps.branch} at \`${parseDate(ps.createdAt)}\``,
-    `*Description:* ${ps.title}`,
-    `Click *<${ps.eventLink}|HERE>* to see the ${ps.eventType}`,
+    `\`@${ps.author}\` fez um push para <${ps.repositoryURL}|${ps.repository
+    }> na branch \`${ps.branch}\` em ${parseDate(ps.createdAt)}`,
+    `*Descrição:* ${ps.title}`,
+    `Clique *<${ps.eventLink}|AQUI>* para ver o evento`,
   ]);
-  return baseFactory(blocks);
+  return messageFactory(blocks);
 };
 
 export const pullRequest = (pr: gitPR.MessageType) => {
@@ -45,12 +44,12 @@ export const pullRequest = (pr: gitPR.MessageType) => {
   const shortDescription = pr.title.length > 50 ? pr.title.slice(0, 50) + "..." : pr.title;
 
   const blocks = blockFactory([
-    `\`@${pr.actionResponsible}\` criou um ${pr.eventType} no \`${pr.baseRepoName}\` em ${parseDate(pr.createdAt)}`,
+    `\`@${pr.actionResponsible}\` fez um pull request para \`${pr.baseRepoName}\` em ${parseDate(pr.createdAt)}`,
     `*Pull Request:* ${pr.headBranch} (HEAD) -> ${pr.baseBranch} (BASE)`,
-    `*Description:* ${shortDescription}`,
-    `*Reviewers:* ${reviewers}`,
-    `Click *<${pr.eventLink}|HERE>* to see the ${pr.eventType} and review it A$AP`,
+    `*Descrição:* ${shortDescription}`,
+    `*Revisores:* ${reviewers}`,
+    `Clique *<${pr.eventLink}|AQUI>* para ver o evento e revisar o mais rápido possível`,
   ]);
 
-  return baseFactory(blocks);
+  return messageFactory(blocks);
 };

@@ -7,12 +7,18 @@ export const parseBodyEvent = (eventBody: any) => {
   } else if ((eventBody as gitPR.IncomingType)?.pull_request) {
     return pullRequestEvent(eventBody);
   } else {
-    throw new Error("Event not mapped!");
+    return undefined;
   }
 };
 
 const pushEvent = (eventBody: gitPush.IncomingType) => {
   const { compare, forced, head_commit, pusher, ref, repository } = eventBody;
+
+  const isMainBranch = ["refs/heads/main", "refs/heads/master"].includes(ref);
+  if (!isMainBranch) {
+    return undefined;
+  }
+
   const parsedBody = {
     title: head_commit.message,
     author: pusher.name,
@@ -30,6 +36,13 @@ const pushEvent = (eventBody: gitPush.IncomingType) => {
 
 const pullRequestEvent = (eventBody: gitPR.IncomingType) => {
   const { action, pull_request, sender } = eventBody;
+
+  const isPullRequestCreation = ["opened", "reopened"].includes(action);
+
+  if (!isPullRequestCreation) {
+    return undefined;
+  }
+
   const parsedBody = {
     action,
     actionResponsible: sender.login,
@@ -52,5 +65,5 @@ const pullRequestEvent = (eventBody: gitPR.IncomingType) => {
     baseRepoName: pull_request.base.repo.name,
   };
 
-  return parsedBody.action === "opened" ? parsedBody as gitPR.MessageType : undefined;
+  return parsedBody as gitPR.MessageType;
 };
