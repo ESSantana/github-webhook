@@ -1,60 +1,3 @@
-const schema = {
-  type: "object",
-  properties: {
-    action: { type: "string" },
-    issue: {
-      type: "object",
-      properties: {
-        html_url: { type: "string" },
-        id: { type: "number" },
-        title: { type: "string" },
-        user: {
-          type: "object",
-          properties: {
-            login: { type: "string" },
-            id: { type: "number" },
-            avatar_url: { type: "string" },
-          }
-        },
-        labels: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              id: { type: "number" },
-              name: { type: "string" },
-            }
-          }
-        },
-        state: { type: "string" },
-        assignees: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              id: { type: "number" },
-              login: { type: "string" },
-              avatar_url: { type: "string" },
-            }
-          }
-        },
-        created_at: { type: "string" },
-        closed_at: { type: "string" },
-        body: { type: "string" },
-      },
-    },
-    repository: {
-      type: "object",
-      properties: {
-        id: { type: "number" },
-        name: { type: "string" },
-        html_url: { type: "string" },
-      },
-    },
-  },
-  require: ["action", "issue", "repository"],
-};
-
 type IncomingType = {
 
   action: string,
@@ -90,22 +33,19 @@ type IncomingType = {
 
 type MessageType = {
   eventType: string;
-  issueURL: string,
-  issueTitle: string,
-  issueBody: string,
-  issueCreator: string,
-  issueCreatorID: string,
-  issueCreatorImage: string,
-  labels: {
-    name: string,
-  }[],
-  state: string,
-  assignees: {
-    login: string,
-  }[],
-  createdAt: string,
-  repository: string,
-  repositoryURL: string,
+  action: string;
+  issueURL: string;
+  issueTitle: string;
+  issueBody: string;
+  issueCreator: string;
+  issueCreatorID: string;
+  issueCreatorImage: string;
+  labels: string[];
+  state: string;
+  assignees: string[];
+  createdAt: string;
+  repository: string;
+  repositoryURL: string;
 }
 
-export { schema, IncomingType, MessageType };
+export { IncomingType, MessageType };

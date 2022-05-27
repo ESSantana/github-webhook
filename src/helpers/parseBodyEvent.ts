@@ -4,14 +4,17 @@ import * as gitTag from "@schemas/gitTag";
 import * as gitRelease from "@schemas/gitRelease";
 import * as gitIssue from "@schemas/gitIssue";
 
-export const parseBodyEvent = (eventBody: any) => {
+type TMessage = gitPush.MessageType | gitPR.MessageType | gitTag.MessageType | gitRelease.MessageType | gitIssue.MessageType;
 
+export const parseBodyEvent = (eventBody: any): TMessage => {
   const eventMap = {
     isPush: (eventBody as gitPush.IncomingType)?.ref && (eventBody as gitPush.IncomingType)?.ref
       .startsWith("refs/heads/"),
     isPullRequest: (eventBody as gitPR.IncomingType)?.pull_request !== undefined,
     isTag: (eventBody as gitTag.IncomingType)?.ref && (eventBody as gitTag.IncomingType)?.ref
-      .startsWith("refs/tags/")
+      .startsWith("refs/tags/"),
+    isRelease: (eventBody as gitRelease.IncomingType)?.release !== undefined,
+    isIssue: (eventBody as gitIssue.IncomingType)?.issue !== undefined,
   };
 
   console.debug("Event Map:", eventMap);
@@ -22,6 +25,10 @@ export const parseBodyEvent = (eventBody: any) => {
     return parsePullRequest(eventBody);
   } else if (eventMap.isTag) {
     return parseTag(eventBody);
+  } else if (eventMap.isRelease) {
+    return parseRelease(eventBody);
+  } else if (eventMap.isIssue) {
+    return parseIssue(eventBody);
   } else {
     return undefined;
   }
@@ -72,10 +79,7 @@ const parsePullRequest = (eventBody: gitPR.IncomingType): gitPR.MessageType => {
     createdAt: pull_request.created_at,
     mergetAt: pull_request.merged_at,
     eventType: "pull request",
-    reviewers: pull_request.requested_reviewers.map((reviewer) => ({
-      login: reviewer.login,
-      id: String(reviewer.id),
-    })),
+    reviewers: pull_request.requested_reviewers.map((reviewer) =>`\`@${reviewer.login}\``),
     headBranch: pull_request.head.ref,
     baseBranch: pull_request.base.ref,
     baseRepoName: pull_request.base.repo.name,
@@ -105,6 +109,60 @@ const parseTag = (eventBody: gitTag.IncomingType): gitTag.MessageType => {
     actionResponsible: sender.login,
     actionResponsibleID: String(sender.id),
     actionResponsibleImage: sender.avatar_url,
+  }
+
+  return parsedBody;
+}
+
+
+const parseRelease = (eventBody: gitRelease.IncomingType): gitRelease.MessageType => {
+  const { action, release, repository } = eventBody;
+
+  if (action != "published") {
+    return undefined;
+  }
+
+  const parsedBody = {
+    eventType: "release",
+    releaseName: release.name,
+    releaseURL: release.html_url,
+    prerelease: release.prerelease,
+    publishedAt: release.published_at,
+    body: release.body,
+    repository: repository.name,
+    repositoryURL: repository.html_url,
+    author: release.author.login,
+    authorID: String(release.author.id),
+    authorImage: release.author.avatar_url,
+  }
+
+  return parsedBody;
+}
+
+const parseIssue = (eventBody: gitIssue.IncomingType): gitIssue.MessageType => {
+  const { action, issue, repository } = eventBody;
+
+  if (action !== "opened" && action !== "reopened" && action !== "closed") {
+    return undefined;
+  }
+
+  const actionMap = { opened: "abriu", reopened: "reabriu", closed: "fechou" };
+
+  const parsedBody = {
+    eventType: "issue",
+    action: actionMap[action],
+    issueURL: issue.html_url,
+    issueTitle: issue.title,
+    issueBody: issue.body,
+    issueCreator: issue.user.login,
+    issueCreatorID: String(issue.user.id),
+    issueCreatorImage: issue.user.avatar_url,
+    labels: issue.labels.map((label) => `\`${label.name}\``),
+    state: issue.state,
+    assignees: issue.assignees.map((assignee) => `\`@${assignee.login}\``),
+    createdAt: issue.created_at,
+    repository: repository.name,
+    repositoryURL: repository.html_url,
   }
 
   return parsedBody;

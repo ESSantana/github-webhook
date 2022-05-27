@@ -1,38 +1,3 @@
-const schema = {
-  type: "object",
-  properties: {
-    action: { type: "string" },
-    release: {
-      type: "object",
-      properties: {
-        html_url: { type: "string" },
-        id: { type: "number" },
-        author: {
-          type: "object",
-          properties: {
-            login: { type: "string" },
-            id: { type: "number" },
-            avatar_url: { type: "string" },
-
-          }
-        },
-        name: { type: "string" },
-        prerelease: { type: "boolean" },
-        published_at: { type: "string" },
-        body: { type: "string" },
-      },
-    },
-    repository: {
-      type: "object",
-      properties: {
-        id: { type: "number" },
-        name: { type: "string" },
-        html_url: { type: "string" },
-      },
-    },
-  }, required: ["action", "release", "repository"],
-};
-
 type IncomingType = {
   action: string;
   release: {
@@ -59,7 +24,7 @@ type MessageType = {
   eventType: string;
   releaseName: string;
   releaseURL: string;
-  prerelease: string;
+  prerelease: boolean;
   publishedAt: string;
   body: string;
   repository: string;
@@ -69,4 +34,4 @@ type MessageType = {
   authorImage: string;
 }
 
-export {schema, IncomingType, MessageType};
+export { IncomingType, MessageType };

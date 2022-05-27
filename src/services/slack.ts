@@ -23,22 +23,16 @@ export const sendMessageToChannel = async (
 const selectMessageFactory = (event: string) => {
   switch (event) {
     case "push":
-      console.debug("push factory");
       return msgFactory.push;
     case "pull request":
-      console.debug("pull request factory");
       return msgFactory.pullRequest;
     case "tag":
-      console.debug("tag factory");
       return msgFactory.tag;
     case "release":
-      console.debug("release factory");
-      throw new Error("not implemented");
+      return msgFactory.release;
     case "issue":
-      console.debug("issue factory");
-      throw new Error("not implemented");
+      return msgFactory.issue;
     default:
-      console.debug("Event not mapped!");
       throw new Error("Event not mapped!");
   }
 };

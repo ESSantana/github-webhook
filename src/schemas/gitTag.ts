@@ -1,28 +1,3 @@
-const schema = {
-  type: "object",
-  properties: {
-    ref: { type: "string" },
-    repository: {
-      type: "object",
-      properties: {
-        id: { type: "number" },
-        name: { type: "string" },
-        full_name: { type: "string" },
-        html_url: { type: "string" },
-      },
-      sender: {
-        type: "object",
-        properties: {
-          login: { type: "string" },
-          id: { type: "number" },
-          avatar_url: { type: "string" },
-        },
-      },
-    deleted: { type: "boolean" },
-    }
-  }, required: ["ref", "repository", "sender", "deleted"],
-};
-
 type IncomingType = {
   ref: string;
   repository: {
@@ -50,4 +25,4 @@ type MessageType = {
   actionResponsibleImage: string;
 }
 
-export { schema, IncomingType, MessageType };
+export { IncomingType, MessageType };

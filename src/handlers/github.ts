@@ -4,27 +4,26 @@ import {
 } from "@helpers/apiGateway";
 import { middyfy } from "@middlewares/lambda";
 import { parseBodyEvent } from "@helpers/parseBodyEvent";
-
+import { sendMessageToChannel } from "@services/slack";
 import * as gitPush from "@schemas/gitPush";
 import * as gitPR from "@schemas/gitPR";
 import * as gitTag from "@schemas/gitTag";
-import { sendMessageToChannel } from "@services/slack";
+
+import { StatusCodes } from "http-status-codes";
 
 const handler: ValidatedEventAPIGatewayProxyEvent<
   typeof gitPR.schema | typeof gitPush.schema | typeof gitTag.schema
 > = async (event) => {
-  console.debug("Evento Original: ", event);
   const parsedEvent = parseBodyEvent(event.body);
-  console.debug("Evento Parseado: ", parsedEvent);
 
   if (!parsedEvent) {
-    return formatJSONResponse({
+    return formatJSONResponse(StatusCodes.NO_CONTENT, {
       response: "",
     });
   }
 
   const response = await sendMessageToChannel(parsedEvent);
-  return formatJSONResponse({
+  return formatJSONResponse(StatusCodes.OK, {
     response,
   });
 };

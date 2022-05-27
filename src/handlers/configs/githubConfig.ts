@@ -1,4 +1,3 @@
-// import schema from "@schemas/github";
 import { handlerPath } from "@utils/utils";
 
 export default {
