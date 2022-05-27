@@ -1,10 +1,15 @@
-import { IncomingWebhook } from "@slack/webhook";
+import * as msgFactory from "@helpers/slackMessageFactory";
 import * as gitPush from "@schemas/gitPush";
 import * as gitPR from "@schemas/gitPR";
-import * as msgFactory from "@helpers/slackMessageFactory";
+import * as gitTag from "@schemas/gitTag";
+import * as gitRelease from "@schemas/gitRelease";
+import * as gitIssue from "@schemas/gitIssue";
+
+import { IncomingWebhook } from "@slack/webhook";
 
 export const sendMessageToChannel = async (
-  messageData: gitPush.MessageType | gitPR.MessageType
+  messageData: gitPush.MessageType | gitPR.MessageType | gitTag.MessageType
+    | gitRelease.MessageType | gitIssue.MessageType
 ) => {
   const messageFactory = selectMessageFactory(messageData.eventType);
   const message = messageFactory(messageData as any);
@@ -23,6 +28,15 @@ const selectMessageFactory = (event: string) => {
     case "pull request":
       console.debug("pull request factory");
       return msgFactory.pullRequest;
+    case "tag":
+      console.debug("tag factory");
+      return msgFactory.tag;
+    case "release":
+      console.debug("release factory");
+      throw new Error("not implemented");
+    case "issue":
+      console.debug("issue factory");
+      throw new Error("not implemented");
     default:
       console.debug("Event not mapped!");
       throw new Error("Event not mapped!");

@@ -2,6 +2,9 @@ import { MessageAttachment, Block, KnownBlock } from "@slack/types";
 import { parseDate } from "@utils/parse";
 import * as gitPush from "@schemas/gitPush";
 import * as gitPR from "@schemas/gitPR";
+import * as gitTag from "@schemas/gitTag";
+import * as gitRelease from "@schemas/gitRelease";
+import * as gitIssue from "@schemas/gitIssue";
 
 const messageFactory = (blocks: (Block | KnownBlock)[], color?: string) => {
   const message: MessageAttachment = {
@@ -49,6 +52,16 @@ export const pullRequest = (pr: gitPR.MessageType) => {
     `*Descrição:* ${shortDescription}`,
     `*Revisores:* ${reviewers}`,
     `Clique *<${pr.eventLink}|AQUI>* para ver o evento e revisar o mais rápido possível`,
+  ]);
+
+  return messageFactory(blocks);
+};
+
+export const tag = (tag: gitTag.MessageType) => {
+  const blocks = blockFactory([
+    `\`@${tag.actionResponsible}\` criou a tag \`${tag.tagName}\` em
+    <${tag.repositoryURL}|${tag.repository}>`,
+    `Clique *<${tag.eventLink}|AQUI>* para ver o evento`,
   ]);
 
   return messageFactory(blocks);

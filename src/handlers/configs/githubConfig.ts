@@ -8,11 +8,6 @@ export default {
       http: {
         method: "post",
         path: "github-webhook",
-        // request: {
-        //   schemas: {
-        //     "application/json": any,
-        //   },
-        // },
       },
     },
   ],

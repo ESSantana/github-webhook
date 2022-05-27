@@ -7,10 +7,11 @@ import { parseBodyEvent } from "@helpers/parseBodyEvent";
 
 import * as gitPush from "@schemas/gitPush";
 import * as gitPR from "@schemas/gitPR";
+import * as gitTag from "@schemas/gitTag";
 import { sendMessageToChannel } from "@services/slack";
 
 const handler: ValidatedEventAPIGatewayProxyEvent<
-  typeof gitPR.schema | typeof gitPush.schema
+  typeof gitPR.schema | typeof gitPush.schema | typeof gitTag.schema
 > = async (event) => {
   console.debug("Evento Original: ", event);
   const parsedEvent = parseBodyEvent(event.body);
