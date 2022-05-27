@@ -8,10 +8,10 @@ type TMessage = gitPush.MessageType | gitPR.MessageType | gitTag.MessageType | g
 
 export const parseBodyEvent = (eventBody: any): TMessage => {
   const eventMap = {
-    isPush: (eventBody as gitPush.IncomingType)?.ref && (eventBody as gitPush.IncomingType)?.ref
+    isPush: (eventBody as gitPush.IncomingType)?.ref !== undefined && (eventBody as gitPush.IncomingType)?.ref
       .startsWith("refs/heads/"),
     isPullRequest: (eventBody as gitPR.IncomingType)?.pull_request !== undefined,
-    isTag: (eventBody as gitTag.IncomingType)?.ref && (eventBody as gitTag.IncomingType)?.ref
+    isTag: (eventBody as gitTag.IncomingType)?.ref !== undefined && (eventBody as gitTag.IncomingType)?.ref
       .startsWith("refs/tags/"),
     isRelease: (eventBody as gitRelease.IncomingType)?.release !== undefined,
     isIssue: (eventBody as gitIssue.IncomingType)?.issue !== undefined,
@@ -79,7 +79,7 @@ const parsePullRequest = (eventBody: gitPR.IncomingType): gitPR.MessageType => {
     createdAt: pull_request.created_at,
     mergetAt: pull_request.merged_at,
     eventType: "pull request",
-    reviewers: pull_request.requested_reviewers.map((reviewer) =>`\`@${reviewer.login}\``),
+    reviewers: pull_request.requested_reviewers.map((reviewer) => `\`@${reviewer.login}\``),
     headBranch: pull_request.head.ref,
     baseBranch: pull_request.base.ref,
     baseRepoName: pull_request.base.repo.name,

@@ -1100,11 +1100,6 @@
     "es6-iterator" "^2.0.3"
     "es6-symbol" "^3.1.1"
 
-"esbuild-windows-64@0.14.39":
-  "integrity" "sha512-E2wm+5FwCcLpKsBHRw28bSYQw0Ikxb7zIMxw3OPAkiaQhLVr3dnVO8DofmbWhhf6b97bWzg37iSZ45ZDpLw7Ow=="
-  "resolved" "https://registry.npmjs.org/esbuild-windows-64/-/esbuild-windows-64-0.14.39.tgz"
-  "version" "0.14.39"
-
 "esbuild@^0.14.11", "esbuild@>=0.8 <0.15":
   "integrity" "sha512-2kKujuzvRWYtwvNjYDY444LQIA3TyJhJIX3Yo4+qkFlDDtGlSicWgeHVJqMUP/2sSfH10PGwfsj+O2ro1m10xQ=="
   "resolved" "https://registry.npmjs.org/esbuild/-/esbuild-0.14.39.tgz"
