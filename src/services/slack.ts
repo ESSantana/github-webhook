@@ -1,11 +1,7 @@
 import * as msgFactory from "@helpers/slackMessageFactory";
-import * as gitPush from "@schemas/gitPush";
-import * as gitPR from "@schemas/gitPR";
-import * as gitTag from "@schemas/gitTag";
-import * as gitRelease from "@schemas/gitRelease";
-import * as gitIssue from "@schemas/gitIssue";
+import { gitPush, gitPR, gitTag, gitRelease, gitIssue } from "@schemas/index";
 
-import { IncomingWebhook } from "@slack/webhook";
+import { IncomingWebhook, } from "@slack/webhook";
 
 export const sendMessageToChannel = async (
   messageData: gitPush.MessageType | gitPR.MessageType | gitTag.MessageType

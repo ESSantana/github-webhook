@@ -1,8 +1,4 @@
-import * as gitPush from "@schemas/gitPush";
-import * as gitPR from "@schemas/gitPR";
-import * as gitTag from "@schemas/gitTag";
-import * as gitRelease from "@schemas/gitRelease";
-import * as gitIssue from "@schemas/gitIssue";
+import { gitPush, gitPR, gitTag, gitRelease, gitIssue } from "@schemas/index";
 
 type TMessage = gitPush.MessageType | gitPR.MessageType | gitTag.MessageType | gitRelease.MessageType | gitIssue.MessageType;
 

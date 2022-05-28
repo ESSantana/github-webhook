@@ -1,10 +1,6 @@
 import { MessageAttachment, Block, KnownBlock } from "@slack/types";
 import { parseDate } from "@utils/parse";
-import * as gitPush from "@schemas/gitPush";
-import * as gitPR from "@schemas/gitPR";
-import * as gitTag from "@schemas/gitTag";
-import * as gitRelease from "@schemas/gitRelease";
-import * as gitIssue from "@schemas/gitIssue";
+import { gitPush, gitPR, gitTag, gitRelease, gitIssue } from "@schemas/index";
 
 const messageFactory = (blocks: (Block | KnownBlock)[], color?: string) => {
   const message: MessageAttachment = {

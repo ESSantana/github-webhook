@@ -1,5 +1,4 @@
 type IncomingType = {
-
   action: string,
   issue: {
     html_url: string,
