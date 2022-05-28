@@ -15,7 +15,7 @@ const serverlessConfiguration: AWS = {
       shouldStartNameWithService: true,
     },
     environment: {
-      SLACK_WEBHOOK_URL: "https://hooks.slack.com/services/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",
+      SLACK_WEBHOOK_URL: "URL_TEST",
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
     },
