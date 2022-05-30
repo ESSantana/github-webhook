@@ -2,12 +2,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@data/*": ["src/data/*"], 
       "@handlers/*": ["src/handlers/*"],
-      "@handlers-configs/*": ["src/handlers/configs/*"],
       "@helpers/*": ["src/helpers/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@schemas/*": ["src/schemas/*"],
       "@services/*": ["src/services/*"],
+      "@internal-types/*": ["src/types/*"],
       "@utils/*": ["src/utils/*"]
     }
   }

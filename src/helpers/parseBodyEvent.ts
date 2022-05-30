@@ -1,6 +1,6 @@
 import { gitPush, gitPR, gitTag, gitRelease, gitIssue } from "@schemas/index";
 
-type TMessage = gitPush.MessageType | gitPR.MessageType | gitTag.MessageType | gitRelease.MessageType | gitIssue.MessageType;
+import { TMessage } from "@internal-types/github";
 
 export const parseBodyEvent = (eventBody: any): TMessage => {
   const eventMap = {

@@ -1,0 +1,64 @@
+service: github-slack-notification
+frameworkVersion: "3"
+provider:
+  name: aws
+  stage: dev
+  runtime: nodejs14.x
+  region: sa-east-1
+  apiGateway:
+    minimumCompressionSize: 1024
+    shouldStartNameWithService: true
+  environment:
+    SLACK_WEBHOOK_URL: ${ssm:/slack-webhook-test}
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
+    DB_HOST: ${ssm:/webhook-db-host}
+    DB_USER: ${ssm:/webhook-db-user}
+    DB_PASSWORD: ${ssm:/webhook-db-password}
+    DB_NAME: ${ssm:/webhook-db-name}
+  iam:
+      role:
+        statements:
+          - Effect: Allow
+            Action:
+              - rds:BatchExecuteStatement
+              - rds:BeginTransaction
+              - rds:CommitTransaction
+              - rds:ExecuteSql
+              - rds:ExecuteStatement
+              - rds:RollbackTransaction
+            Resource: 'arn:aws:rds:sa-east-1:*:*'
+
+package:
+  individually: true
+
+plugins:
+  - serverless-esbuild
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude:
+      - aws-sdk
+    target: node14
+    define:
+      require.resolve: undefined
+    platform: node
+    concurrency: 10
+
+functions:
+  github-webhook:
+    handler: src/handlers/github.main
+    events:
+      - http:
+          method: POST
+          path: github-webhook
+
+  slack-callback:
+    handler: src/handlers/slackCallback.main
+    events:
+      - http:
+          method: POST
+          path: webhook-callback

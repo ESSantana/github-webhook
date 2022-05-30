@@ -8,7 +8,7 @@ import { sendMessageToChannel } from "@services/slack";
 
 import { StatusCodes } from "http-status-codes";
 
-const handler: ValidatedEventAPIGatewayProxyEvent<any> = async (event) => {
+const handler: ValidatedEventAPIGatewayProxyEvent<unknown> = async (event) => {
   const parsedEvent = parseBodyEvent(event.body);
 
   if (!parsedEvent) {
